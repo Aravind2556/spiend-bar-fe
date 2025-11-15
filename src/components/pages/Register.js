@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useContext } from 'react';
 import { DContext } from '../../context/Datacontext';
-import LoginImg from '../../assets/medicine.svg'
+import LoginImg from '../../assets/47479.jpg'
 
 const Register = () => {
 
