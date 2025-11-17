@@ -58,45 +58,109 @@ const Register = () => {
     }
 
 
-  return (
-    <div className='flex flex-wrap justify-center items-center min-h-[85vh]'>
-        <div className='text-center p-2'>
-            <img className='mx-auto' src={LoginImg} alt='register-illus' style={{height: '150px'}} />
-            <h1 className='text-3xl font-bold text-primary-500 my-2'>Create an Account!</h1>
-            <p className='text-base'><small>Enter all the required details and verify your Email for creating a new Account.</small></p>
+    return (
+        <div className="flex justify-center items-center bg-gray-50 px-4 min-h-[90vh]">
+
+            {/* Card */}
+            <div className="bg-white shadow-xl rounded-2xl w-full max-w-lg p-8">
+
+                {/* Top section */}
+                <div className="text-center mb-6">
+                    <img src={LoginImg} alt="register" className="mx-auto h-24 rounded-lg shadow" />
+                    <h1 className="text-3xl font-extrabold text-primary-500 mt-4">Create Account</h1>
+                    <p className="text-gray-500 text-sm mt-1">
+                        Fill all details to create your account
+                    </p>
+                </div>
+
+                {/* Register Form */}
+                <form>
+                    {/* Full Name */}
+                    <label className="block mb-3">
+                        <span className="text-gray-700 font-medium">Full Name</span>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            type="text"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                            placeholder="Your Name"
+                        />
+                    </label>
+
+                    {/* Contact */}
+                    <label className="block mb-3">
+                        <span className="text-gray-700 font-medium">Contact</span>
+                        <input
+                            value={contact}
+                            onChange={(e) => setContact(e.target.value)}
+                            type="number"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                            placeholder="+91 9876543210"
+                        />
+                    </label>
+
+                    {/* Email */}
+                    <label className="block mb-3">
+                        <span className="text-gray-700 font-medium">Email Address</span>
+                        <input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                            placeholder="name@example.com"
+                        />
+                    </label>
+
+                    {/* Password */}
+                    <label className="block mb-3">
+                        <span className="text-gray-700 font-medium">Password</span>
+                        <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                            placeholder="••••••••"
+                        />
+                    </label>
+
+                    {/* Confirm Password */}
+                    <label className="block mb-3">
+                        <span className="text-gray-700 font-medium">Confirm Password</span>
+                        <input
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            type="password"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                            placeholder="••••••••"
+                        />
+                    </label>
+
+                    {/* Error Message */}
+                    {!comparePassword && (
+                        <p className="text-red-500 text-sm mb-3 text-center">Passwords do not match</p>
+                    )}
+
+                    {/* Register Button */}
+                    <button
+                        onClick={handleRegister}
+                        type="button"
+                        className="w-full py-3 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold shadow-md hover:opacity-90 transition"
+                    >
+                        Register <i className="bi bi-door-open"></i>
+                    </button>
+
+                    {/* Login Link */}
+                    <p className="text-center text-sm text-gray-600 mt-4">
+                        Already have an account?{" "}
+                        <a href="/login" className="text-primary-500 font-medium hover:underline">
+                            Login here
+                        </a>
+                    </p>
+                </form>
+            </div>
         </div>
-        <div className='text-slate-950 bg-white m-3 p-5 md:w-5/12 rounded border-[1px] border-primary-500'>
-            <h2 className='text-center text-primary-500 font-bold text-xl mb-3'>Register</h2>
-            <p className='mb-3'>Already have an account? then <a className='text-sky-600' href='/login'>Click here</a></p>
-            <form>
-            <div className="mb-3">
-                <label htmlFor="InputName" className="block text-sm/6 font-medium text-gray-900">Full Name</label>
-                <input value={name} onChange={(e) => setName(e.target.value)} required type="text" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputName" placeholder="Your name"/>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="InputContact" className="block text-sm/6 font-medium text-gray-900">Contact</label>
-                <input value={contact} onChange={(e) => setContact(e.target.value)} required type="number" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputContact" placeholder="+91 9876543210"/>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="InputEmail" className="block text-sm/6 font-medium text-gray-900">Email address</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputEmail" placeholder="name@example.com"/>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="InputPassword" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                <input value={password} onChange={(e) => setPassword(e.target.value)} required type="password" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputPassword" placeholder="••••••••"/>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="InputConfirmPassword" className="block text-sm/6 font-medium text-gray-900">Confirm Password</label>
-                <input value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} type="password" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputConfirmPassword" required placeholder="••••••••"/>
-            </div>
-            <p className='my-2 ms-3 bagde bg-danger text-red-500'>{comparePassword? '': 'Passwords do not match'}</p>
-            <div className='d-flex justify-content-center'>
-                <button onClick={handleRegister} type='button' className='rounded-full px-4 py-1 text-md bg-primary-500 hover:bg-secondary-600 text-white'>Register <i className='bi bi-door-open'></i></button>
-            </div>
-            </form>
-        </div>
-    </div>
-  )
+    );
+
 }
 
 export default Register

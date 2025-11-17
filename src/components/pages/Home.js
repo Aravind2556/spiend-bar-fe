@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import LiveChart from '../blocks/LiveChart'
+import SensorBG from '../../assets/spine.jpg'
+import ThoracicIm from '../../assets/Thoracic.avif'
+import SacralIm from '../../assets/Thoracic.avif'
+import LumberIm from '../../assets/lumbar.png'
+import CervicalIm from '../../assets/Cervical.png'
+import LeftShoulderIm from '../../assets/Leftshoulder.png'
+import RigthShoulderIm from '../../assets/right shoulder.jpg'
+import HipIm from '../../assets/hip-pain-new.jpg'
+
 
 function Home() {
 
@@ -92,14 +101,14 @@ function Home() {
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field7) || 0),
               color: "black",
-              seriesName: 'Left Liver'
+              seriesName: 'Left Hip'
             })
 
             setRightHip({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field8) || 0),
               color: "black",
-              seriesName: 'Right Liver'
+              seriesName: 'Right Hip'
             })
 
             const recentGripLevel = data.feeds.slice(-1)[0].field1.toUpperCase()
@@ -195,44 +204,142 @@ function Home() {
     return <div>Loading...</div>
   }
 
-
   return (
-    <div className="mx-auto">
-
-      <div className="md:flex md:justify-evenly gap-6 mt-6 px-6 space-y-3">
+    <div className="mx-auto space-y-10 md:px-10 px-2">
+      <div className="md:flex md:justify-evenly gap-6 mt-6 space-y-3">
         {/* Current Value Card */}
-        <div className="border px-6 py-5 rounded-2xl shadow-md bg-white w-full md:w-1/2">
+        <div className="border rounded-2xl shadow-md bg-white w-full p-3">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Current Values</h2>
 
           <div className="text-center text-primary-950 font-bold text-2xl mb-6 tracking-wide">
             SPINAL BAR
           </div>
 
-          <div className="space-y-4">
-            <CardRow label="Recent Cervicel value" className={`${Number(recentCervicalValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentCervicalValue} />
-            <CardRow label="Recent Thoracic value" className={`${Number(recentThoracicValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentThoracicValue} />
-            <CardRow label="Recent Lumber value" className={`${Number(recentLumberValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentLumberValue} />
-            <CardRow label="Recent Sacral value" className={`${Number(recentSacralValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentSacralValue} />
-            <CardRow label="Recent Left Shoulder value" className={`${Number(recentLeftShoulderValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentLeftShoulderValue} />
-            <CardRow label="Recent Right Shoulder value" className={`${Number(recentRightShoulderValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentRightShoulderValue} />
-            <CardRow label="Recent Left Hip value" className={`${Number(recentLeftHipValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`} value={recentLeftHipValue} />
-            <CardRow label="Recent Right Hip value" className={`${Number(recentRightHipValue) === Number(EmergencyValue) ? "bg-red-500 text-white" : "bg-secondary-100"}`}  value={recentRightHipValue} />
+          <div className="space-y-4 flex flex-wrap">
+            <CardRow
+              label="Recent Cervical Value"
+              value={recentCervicalValue}
+              bgImage={CervicalIm}
+              className={
+                Number(recentCervicalValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+            <CardRow
+              label="Recent Thoracic Value"
+              value={recentThoracicValue}
+              bgImage={ThoracicIm}
+              className={
+                Number(recentThoracicValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+
+            <CardRow
+              label="Recent Lumber Value"
+              value={recentLumberValue}
+              bgImage={LumberIm}
+              className={
+                Number(recentLumberValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+
+            <CardRow
+              label="Recent Sacral Value"
+              value={recentSacralValue}
+              bgImage={SacralIm}
+              className={
+                Number(recentSacralValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+
+            <CardRow
+              label="Recent Left Shoulder Value"
+              value={recentLeftShoulderValue}
+              bgImage={LeftShoulderIm}
+              className={
+                Number(recentLeftShoulderValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+
+            <CardRow
+              label="Recent Right Shoulder Value"
+              value={recentRightShoulderValue}
+              bgImage={RigthShoulderIm}
+              className={
+                Number(recentRightShoulderValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+
+            <CardRow
+              label="Recent Left Hip Value"
+              value={recentLeftHipValue}
+              bgImage={HipIm}
+              className={
+                Number(recentLeftHipValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white "
+              }
+            />
+
+            <CardRow
+              label="Recent Right Hip Value"
+              value={recentRightHipValue}
+              bgImage={HipIm}
+              className={
+                Number(recentRightHipValue) === Number(EmergencyValue)
+                  ? "shadow-md shadow-red-500 animate-pulse"
+                  : "bg-white"
+              }
+            />
           </div>
         </div>
       </div>
 
 
-   
       {/* Charts Section */}
-      <div className="flex flex-wrap justify-around gap-2">
-        {[cervical, thoracic, lumber , sacral , leftShoulder , rightShoulder , leftHip , rightHip].map((chartData, i) => {
-            return (
-              <div className=" m-2 border w-11/12 md:w-5/12 rounded-lg" key={i} style={{ marginBottom: "20px" }}>
-                <LiveChart data={[chartData]} title={chartData.seriesName} lineStyle={'straight'} lineWidth={1} chartType={'line'} controls={controls} />
-              </div>
-            )
-          })}
+      <div className="flex flex-wrap justify-center md:justify-between gap-4">
+        {[cervical, thoracic, lumber, sacral, leftShoulder, rightShoulder, leftHip, rightHip].map(
+          (chartData, i) => (
+            <div
+              key={i}
+              className="
+          w-full md:w-[48%] 
+          bg-white rounded-2xl p-4 
+          transition-all duration-300 
+          hover:-translate-y-1 shadow shadow-primary-300
+        "
+            >
+              {/* Title */}
+              <h3 className="text-center font-semibold text-primary-600 mb-3 text-lg">
+                {chartData.seriesName}
+              </h3>
+
+              {/* Chart Component */}
+              <LiveChart
+                data={[chartData]}
+                lineStyle={"straight"}
+                lineWidth={1}
+                chartType={"line"}
+                controls={controls}
+              />
+            </div>
+          )
+        )}
       </div>
+
+
+
 
     </div>
   );
@@ -241,11 +348,26 @@ function Home() {
 export default Home
 
 
-const CardRow = ({ label, value , className }) => (
-  <div className={`${className} flex justify-between items-center  rounded-lg py-2 px-3`}>
-    <span className="font-medium">{label}:</span>
-    <span className="font-semibold text-secondary-800 bg-secondary-200 py-1 px-2 rounded-md">
-      {value}
-    </span>
+const CardRow = ({ label, value, bgImage, className }) => (
+  <div className={`${className} shadow-lg rounded-2xl p-4 w-full max-w-sm mx-auto relative`}>
+
+    {/* 🖼 Product / Sensor Image */}
+    <img
+      src={bgImage}
+      alt={label}
+      className="w-32 mx-auto mt-6 mb-2 drop-shadow-md"
+    />
+
+    {/* Title */}
+    <h3 className="text-lg font-semibold text-center mt-2">
+      {label}
+    </h3>
+
+    {/* Category / Value */}
+    <p className="text-gray-500 text-sm text-center">
+      Value: {value}
+    </p>
+
   </div>
 );
+

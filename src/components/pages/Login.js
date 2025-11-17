@@ -49,30 +49,61 @@ const Login = () => {
 
 
   return (
-    <div className='flex flex-wrap justify-center items-center' style={{minHeight: '85vh'}}>
-        <div className='text-center p-3'>
-            <img className='mx-auto' src={LoginImg} alt='signin-illus' style={{height: '150px'}} />
-            <h1 className='text-3xl font-bold my-3 text-primary-400'>Welcome Back!</h1>
-            <p className='text-base'><small>Enter your registered Email and Password for accesing your user account.</small></p>
-        </div>
-        <div className='bg-slate-100 text-slate-950 m-3 p-5 w-full md:w-5/12 rounded-md'>
-            <h2 className='text-center text-primary-400 text-xl mb-3 font-bold'>Login</h2>
-            <p className='my-3'>Don't have an account? then <a className='text-sky-500' href='/register'>Click here</a></p>
-            <form>
-            <div className="mb-3">
-                <label htmlFor="InputEmail" className="block text-sm/6 font-medium text-gray-900">Email address</label>
-                <input value={email} onChange={(e)=>{setEmail(e.target.value)}} required type="email" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputEmail" placeholder="name@mail.com"/>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="InputPassword" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                <input value={password} onChange={(e)=>{setPassword(e.target.value)}} required type="password" className="p-2 rounded-2 border-[1px] rounded border-slate-400 focus:outline-secondary-500 my-2 w-full" id="InputPassword" placeholder="••••••••"/>
-            </div>
-            <div className='d-flex justify-content-center'>
-                <button onClick={HandleLogin} type='submit' className='rounded-full px-4 py-1 text-md bg-primary-500 hover:bg-secondary-600 text-white'>Login <i className='bi bi-box-arrow-in-right'></i></button>
-            </div>
-            </form>
-        </div>
-    </div>
+      <div className="flex justify-center items-center bg-gray-50 px-4" style={{ minHeight: "90vh" }}>
+
+          {/* Card */}
+          <div className="bg-white shadow-xl rounded-2xl w-full max-w-md p-8">
+
+              {/* Top Section */}
+              <div className="text-center mb-6">
+                  <img src={LoginImg} alt="login" className="mx-auto h-24 rounded-lg shadow" />
+                  <h1 className="text-3xl font-extrabold text-primary-500 mt-4">Welcome Back</h1>
+                  <p className="text-gray-500 text-sm mt-1">Please login to continue</p>
+              </div>
+
+              {/* Form */}
+              <form>
+                  <label className="block mb-3">
+                      <span className="text-gray-700 font-medium">Email</span>
+                      <input
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          type="email"
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                          placeholder="name@mail.com"
+                      />
+                  </label>
+
+                  <label className="block mb-5">
+                      <span className="text-gray-700 font-medium">Password</span>
+                      <input
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          type="password"
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-400 focus:outline-none"
+                          placeholder="••••••••"
+                      />
+                  </label>
+
+                  {/* Login Button */}
+                  <button
+                      onClick={HandleLogin}
+                      type="submit"
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold shadow-md hover:opacity-90 transition"
+                  >
+                      Login <i className="bi bi-box-arrow-in-right"></i>
+                  </button>
+
+                  {/* Register text */}
+                  <p className="text-center text-sm text-gray-600 mt-4">
+                      Don't have an account?{" "}
+                      <a href="/register" className="text-primary-500 font-medium hover:underline">
+                          Register here
+                      </a>
+                  </p>
+              </form>
+          </div>
+      </div>
   )
 }
 
