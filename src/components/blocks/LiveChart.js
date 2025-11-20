@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const CustomApexChart = ({ data, title, lineStyle, lineWidth, chartType, controls }) => {
+const CustomApexChart = ({ data, title, lineStyle, lineWidth, chartType, controls, markers }) => {
     // Convert each data object into a series object expected by ApexCharts.
     const series = data.map((serie) => {
         // Get only the last 20 items from both x-axis and y-axis

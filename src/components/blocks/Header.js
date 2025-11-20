@@ -52,7 +52,7 @@ export default function Example() {
               src={Logo}
               className="h-[80px] w-auto"
             /> */}
-            <h1 className='font-bold text-primary-400'>SPINAL BAR</h1>
+            <h1 className='font-bold text-primary-500 text-2xl'>SPINAL BAR</h1>
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -90,7 +90,7 @@ export default function Example() {
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                 className="h-8 w-auto"
               /> */}
-              <h1 className='font-bold text-primary-400'>SPINAL BAR</h1>
+              <h1 className='font-bold text-primary-500'>SPINAL BAR</h1>
             </a>
             <button
               type="button"

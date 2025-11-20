@@ -8,30 +8,60 @@ import CervicalIm from '../../assets/Cervical.png'
 import LeftShoulderIm from '../../assets/Leftshoulder.png'
 import RigthShoulderIm from '../../assets/right shoulder.jpg'
 import HipIm from '../../assets/hip-pain-new.jpg'
+import { 
+  RangeValue, 
+  URL ,
+  carvideRangeMin,
+  carvideRangeMax,
 
+  thoracicRangeMin,
+  thoracicRangeMax,
+
+  lumberRangeMin,
+  lumberRangeMax,
+
+  sacralRangeMin,
+  sacralRangeMax,
+
+  leftCarvideRangeMin,
+  leftCarvideRangeMax,
+
+  rightCarvideRangeMin,
+  rightCarvideRangeMax,
+
+  leftIliumRangeMin,
+  leftIliumRangeMax,
+
+  rightIliumRangeMin,
+  rightIliumRangeMax
+} from '../utils/Range'
+import CustomApexChart from '../blocks/CustomApexChart'
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function Home() {
 
-  const [cervical, setCervical] = useState(null) // field 1
-  const [thoracic, setThoracic] = useState(null) // field 2
-  const [lumber, setLumber] = useState(null) // field 3
-  const [sacral,setSacral]=useState(null) //field 4
-  const [leftShoulder,setLeftShoulder]=useState(null) //field 5
-  const [rightShoulder, setRightShoulder] = useState(null) // field 6
-  const [leftHip, setLeftHip] = useState(null) // field 7
-  const [rightHip,setRightHip]=useState(null) // field 8
+  const [cervical, setCervical] = useState(null)
+  const [thoracic, setThoracic] = useState(null)
+  const [lumber, setLumber] = useState(null)
+  const [sacral,setSacral]=useState(null)
+  const [leftShoulder,setLeftShoulder]=useState(null)
+  const [rightShoulder, setRightShoulder] = useState(null)
+  const [leftHip, setLeftHip] = useState(null)
+  const [rightHip,setRightHip]=useState(null)
+
+  const [createdAt, setCreateAt]=useState(null)
+
+  const [showListing, setShowListing] = useState(false)
 
   const [recentCervicalValue, setRecentCervicalValue] = useState(null)
-  const [recentThoracicValue, setRecentThoracicValue] = useState(null) 
-  const [recentLumberValue, setRecentLumberValue] = useState(null) 
+  const [recentThoracicValue, setRecentThoracicValue] = useState(null)
+  const [recentLumberValue, setRecentLumberValue] = useState(null)
   const [recentSacralValue,setRecentSacralValue]=useState(null)
-  const [recentLeftShoulderValue, setRecentLeftShoulderValue] = useState(null) 
+  const [recentLeftShoulderValue, setRecentLeftShoulderValue] = useState(null)
   const [recentRightShoulderValue, setRecentRightShoulderValue] = useState(null)
   const [recentLeftHipValue, setRecentLeftHipValue] = useState(null)
   const [recentRightHipValue, setRecentRightHipValue] = useState(null)
-
-  const url = process.env.REACT_APP_ThinkSpeak_URL
-  const EmergencyValue = 2000
 
   const controls = {
     show: true,
@@ -46,316 +76,436 @@ function Home() {
     autoSelected: 'zoom'
   };
 
+  console.log("create at" , createdAt)
+
   useEffect(() => {
     const fetchData = async () => {
-      fetch(url)
+      fetch(URL)
         .then(res => res.json())
         .then(data => {
-          console.log("data:", data)
+          
           if (data && data.feeds && data.feeds.length > 0) {
             const xAxis = data.feeds.map(feed => new Date(feed.created_at).getTime())
+            setCreateAt(data.feeds[data.feeds.length - 1])
+
+
 
             setCervical({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field1) || 0),
-              color: "black",
               seriesName: 'Cervical'
             })
 
             setThoracic({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field2) || 0),
-              color: "black",
               seriesName: 'Thoracic'
             })
 
             setLumber({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field3) || 0),
-              color: "black",
               seriesName: 'Lumber'
             })
 
             setSacral({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field4) || 0),
-              color: "black",
-              seriesName: 'Sacral'
+              seriesName: 'Sacrum'
             })
 
             setLeftShoulder({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field5) || 0),
-              color: "black",
-              seriesName: 'Left Shoulder'
+              seriesName: 'Left Clavicle'
             })
 
             setRightShoulder({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field6) || 0),
-              color: "black",
-              seriesName: 'Right Shoulder'
+              seriesName: 'Right Clavicle'
             })
 
             setLeftHip({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field7) || 0),
-              color: "black",
-              seriesName: 'Left Hip'
+              seriesName: 'Left Ilium'
             })
 
             setRightHip({
               "x-axis": xAxis,
               "y-axis": data.feeds.map(feed => Number(feed.field8) || 0),
-              color: "black",
-              seriesName: 'Right Hip'
+              seriesName: 'Right Ilium'
             })
 
-            const recentGripLevel = data.feeds.slice(-1)[0].field1.toUpperCase()
-            setRecentCervicalValue(recentGripLevel)
-
-            const recentTemperatureLevel = data.feeds.slice(-1)[0].field2.toUpperCase()
-            setRecentThoracicValue(recentTemperatureLevel)
-
-            const recentFallDetectLevel = data.feeds.slice(-1)[0].field3.toUpperCase()
-            setRecentLumberValue(recentFallDetectLevel)
-
-            const recentPostureLevel = data.feeds.slice(-1)[0].field4.toUpperCase()
-            setRecentSacralValue(recentPostureLevel)
-
-            const recentBatteryPercentageLevel = data.feeds.slice(-1)[0].field5.toUpperCase()
-            setRecentLeftShoulderValue(recentBatteryPercentageLevel)
-
-            const recentHeartRateLevel = data.feeds.slice(-1)[0].field6.toUpperCase()
-            setRecentRightShoulderValue(recentHeartRateLevel)
-
-            const recentSpo2Level = data.feeds.slice(-1)[0].field7.toUpperCase()
-            setRecentLeftHipValue(recentSpo2Level)
-
-            const recentSpo3Level = data.feeds.slice(-1)[0].field8.toUpperCase()
-            setRecentRightHipValue(recentSpo3Level)
+            const lastFeed = data.feeds[data.feeds.length - 1];
+            setRecentCervicalValue(lastFeed.field1);
+            setRecentThoracicValue(lastFeed.field2);
+            setRecentLumberValue(lastFeed.field3);
+            setRecentSacralValue(lastFeed.field4);
+            setRecentLeftShoulderValue(lastFeed.field5);
+            setRecentRightShoulderValue(lastFeed.field6);
+            setRecentLeftHipValue(lastFeed.field7);
+            setRecentRightHipValue(lastFeed.field8);
 
           }
-          else{
-            setCervical({
-              "x-axis": [],
-              "y-axis": [],
-              color: "black",
-              seriesName: 'Heart rate'
-            })
-            setThoracic({
-              "x-axis": [],
-              "y-axis": [],
-              color: "black",
-              seriesName: 'thoracic'
-            })
-            setLumber({
-              "x-axis": [],
-              "y-axis": [],
-              color: "black",
-              seriesName: 'Snoring Level'
-            })
-            setSacral({
-              "x-axis": [],
-              "y-axis": [],
-              color: "#ED254E",
-              seriesName: 'Roll'
-            })
-            setLeftShoulder({
-              "x-axis": [],
-              "y-axis": [],
-              color: "#00F874",
-              seriesName: 'Pitch'
-            })
-            setRightShoulder({
-              "x-axis": [],
-              "y-axis": [],
-              color: "#2A4494",
-              seriesName: 'Yaw'
-            })
-            setRecentCervicalValue("No Data")
-            setRecentThoracicValue("No Data")
-            setRecentLumberValue("No Data")
-            setRecentSacralValue("No Data")
-            setRecentLeftShoulderValue("No Data")
-            setRecentRightShoulderValue("No Data")
-            setRecentLeftHipValue("No Data")
-            setRecentRightHipValue("No Data")
-          }
         })
-        .catch(err => {
-          console.log("Error in fetching from Thinkspeak:", err)
-        })
+        .catch(err => console.log("Fetch error:", err))
     };
 
-    let intervalId
-    if (url) {
-      fetchData();
-      // Optionally, set up polling for live data updates (e.g., every 30 seconds)
-      intervalId = setInterval(fetchData, 5000);
-    }
-
-    return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [url]);
+    fetchData();
+    const intervalId = setInterval(fetchData, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
 
 
 
-  if (!cervical || !thoracic || !lumber || !sacral || !leftShoulder || !rightShoulder ) {
-    return <div>Loading...</div>
-  }
+  /** Extract values for Table **/
+  const cervicalY = cervical?.["y-axis"] || []
+  const thoracicY = thoracic?.["y-axis"] || []
+  const lumberY = lumber?.["y-axis"] || []
+  const sacrumY = sacral?.["y-axis"] || []
+  const leftClavicleY = leftShoulder?.["y-axis"] || []
+  const rightClavicleY = rightShoulder?.["y-axis"] || []
+  const leftilium = leftHip?.["y-axis"] || []
+  const rightilium = rightHip?.["y-axis"] || []
+  const timestamps = cervical?.["x-axis"] || []
+
+
+
+  /** Excel Download **/
+  const downloadExcel = () => {
+    const excelData = cervicalY.map((value, index) => ({
+      "Sl.No": index + 1,
+      "Cervical": cervicalY[index] ?? "-",
+      "Thoracic": thoracicY[index] ?? "-",
+      "Lumber": lumberY[index] ?? "-",
+      "Sacrum": sacrumY[index] ?? "-",
+      "Left Clavicle": leftClavicleY[index] ?? "-",
+      "Right Clavicle": rightClavicleY[index] ?? "-",
+      "Left Ilium": leftilium[index] ?? "-",
+      "Right Ilium": rightilium[index] ?? "-",
+      "Date & Time": new Date(timestamps[index]).toLocaleString() || "-"
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = { Sheets: { Data: worksheet }, SheetNames: ["Data"] };
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+
+    saveAs(new Blob([excelBuffer], { type: "application/octet-stream" }), "Spine-Report.xlsx");
+  };
+
+
+  if (!cervical) return <div>Loading...</div>
+
 
   return (
-    <div className="mx-auto space-y-10 md:px-10 px-2">
-      <div className="md:flex md:justify-evenly gap-6 mt-6 space-y-3">
-        {/* Current Value Card */}
-        <div className="border rounded-2xl shadow-md bg-white w-full p-3">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Current Values</h2>
+    <div className="mx-auto space-y-10 md:px-10 px-2 mb-10">
 
-          <div className="text-center text-primary-950 font-bold text-2xl mb-6 tracking-wide">
-            SPINAL BAR
+
+      <div className="flex justify-end">
+        <button
+          onClick={() => setShowListing(true)}
+          className='bg-primary-600 px-10 py-2 font-semibold text-white rounded-xl'
+        >
+          View Data
+        </button>
+      </div>
+
+
+          <div className="md:flex md:justify-evenly gap-6 mt-6 space-y-3">
+          {/* Current Value Card */}
+           <div className="border rounded-2xl shadow-md bg-white w-full p-3">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-700 mb-4 w-full">
+              Current Values
+            </h2>
+
+            <div>
+              <div className="flex items-center gap-6">
+                {/* {Warning} */}
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                  <p className="text-sm text-gray-700 font-medium">Warning</p>
+                </div>
+
+                {/* Normal */}
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-primary-500"></span>
+                  <p className="text-sm text-gray-700 font-medium">Normal</p>
+                </div>
+              </div>
+
+              <div className='border px-2 py-1 rounded-xl'>
+                Date and Time : {new Date(createdAt?.["created_at"]).toLocaleString() || "-"}
+              </div>
+
+            </div>
           </div>
 
-          <div className="space-y-4 flex flex-wrap">
-            <CardRow
-              label="Recent Cervical Value"
-              value={recentCervicalValue}
-              bgImage={CervicalIm}
-              className={
-                Number(recentCervicalValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
-            <CardRow
-              label="Recent Thoracic Value"
-              value={recentThoracicValue}
-              bgImage={ThoracicIm}
-              className={
-                Number(recentThoracicValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
+             <div className="space-y-4 flex flex-wrap">
+                <CardRow
+                    label="Cervical Value"
+                    value={recentCervicalValue}
+                    bgImage={CervicalIm}
+                    className={
+                      Number(recentCervicalValue) >= Number(carvideRangeMin) || Number(recentCervicalValue) >= Number(carvideRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
+                  <CardRow
+                    label="Thoracic Value"
+                    value={recentThoracicValue}
+                    bgImage={ThoracicIm}
+                    className={
+                      Number(recentThoracicValue) >= Number(thoracicRangeMin) || Number(recentThoracicValue) >= Number(thoracicRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
 
-            <CardRow
-              label="Recent Lumber Value"
-              value={recentLumberValue}
-              bgImage={LumberIm}
-              className={
-                Number(recentLumberValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
+                  <CardRow
+                    label="Lumber Value"
+                    value={recentLumberValue}
+                    bgImage={LumberIm}
+                    className={
+                      Number(recentLumberValue) >= Number(lumberRangeMin) || Number(recentLumberValue) >= Number(lumberRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
 
-            <CardRow
-              label="Recent Sacral Value"
-              value={recentSacralValue}
-              bgImage={SacralIm}
-              className={
-                Number(recentSacralValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
+                  <CardRow
+                    label="Sacrum Value"
+                    value={recentSacralValue}
+                    bgImage={SacralIm}
+                    className={
+                      Number(recentSacralValue) >= Number(sacralRangeMin) || Number(recentSacralValue) >= Number(sacralRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
 
-            <CardRow
-              label="Recent Left Shoulder Value"
-              value={recentLeftShoulderValue}
-              bgImage={LeftShoulderIm}
-              className={
-                Number(recentLeftShoulderValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
+                  <CardRow
+                    label="Left Clavicle Value"
+                    value={recentLeftShoulderValue}
+                    bgImage={LeftShoulderIm}
+                    className={
+                      Number(recentLeftShoulderValue) >= Number(leftCarvideRangeMin) || Number(recentLeftShoulderValue) >= Number(leftCarvideRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
 
-            <CardRow
-              label="Recent Right Shoulder Value"
-              value={recentRightShoulderValue}
-              bgImage={RigthShoulderIm}
-              className={
-                Number(recentRightShoulderValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
+                  <CardRow
+                    label="Right Clavicle Value"
+                    value={recentRightShoulderValue}
+                    bgImage={RigthShoulderIm}
+                    className={
+                      Number(recentRightShoulderValue) >= Number(rightCarvideRangeMin) || Number(recentRightShoulderValue) >= Number(rightCarvideRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
 
-            <CardRow
-              label="Recent Left Hip Value"
-              value={recentLeftHipValue}
-              bgImage={HipIm}
-              className={
-                Number(recentLeftHipValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white "
-              }
-            />
+                  <CardRow
+                    label="Left llium Value"
+                    value={recentLeftHipValue}
+                    bgImage={HipIm}
+                    className={
+                      Number(recentLeftHipValue) >= Number(leftIliumRangeMin) || Number(recentLeftHipValue) >= Number(leftIliumRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
 
-            <CardRow
-              label="Recent Right Hip Value"
-              value={recentRightHipValue}
-              bgImage={HipIm}
-              className={
-                Number(recentRightHipValue) === Number(EmergencyValue)
-                  ? "shadow-md shadow-red-500 animate-pulse"
-                  : "bg-white"
-              }
-            />
+                  <CardRow
+                    label="Right llium Value"
+                    value={recentRightHipValue}
+                    bgImage={HipIm}
+                    className={
+                      Number(recentRightHipValue) >= Number(rightIliumRangeMin) || Number(recentRightHipValue) >= Number(rightIliumRangeMax)
+                        ? "bg-red-500"
+                        : "bg-primary-500"
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+
+            {/* Charts Section */}
+            <div className="flex flex-wrap justify-center md:justify-between gap-4">
+              {[
+                cervical, thoracic, lumber, sacral,
+                leftShoulder, rightShoulder, leftHip, rightHip
+              ]
+                .filter(item => item && (Array.isArray(item['x-axis']) || Array.isArray(item['y-axis']) || Array.isArray(item.data)))
+                .map((chartData, i) => (
+                  <div key={i} className="w-full md:w-[48%] bg-white rounded-2xl p-4 transition-all duration-300 hover:-translate-y-1 shadow shadow-primary-300">
+                    <h3 className="text-center font-semibold text-primary-600 mb-3 text-lg">
+                      {chartData.seriesName}
+                    </h3>
+
+                    <CustomApexChart
+                      data={[chartData]}
+                      title={chartData.seriesName} 
+                      lineStyle="straight"
+                      lineWidth={1}
+                      chartType="line"
+                      controls={controls}
+                      markers={{
+                        threshold: {
+                          carvideRangeMin,
+                          carvideRangeMax,
+                          thoracicRangeMin,
+                          thoracicRangeMax,
+                          lumberRangeMin,
+                          lumberRangeMax,
+                          sacralRangeMin,
+                          sacralRangeMax,
+                          leftCarvideRangeMin,
+                          leftCarvideRangeMax,
+                          rightCarvideRangeMin,
+                          rightCarvideRangeMax,
+                          leftIliumRangeMin,
+                          leftIliumRangeMax,
+                          rightIliumRangeMin,
+                          rightIliumRangeMax
+                        },
+                        size: 4,
+                        fillColor: "red",
+                        strokeColor: "red"
+                      }}
+
+                      /** ADD THIS PART **/
+                      xaxisTitle="Time"
+                      yaxisTitle="Pressure (mmHg)"
+                    />
+                  </div>
+                ))}
+            </div>
+
+
+
+      {/* ------- POPUP ------- */}
+      {showListing && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl p-6 shadow-lg w-[90%] md:w-[80%] relative">
+
+            <button
+              className="absolute top-3 right-3 text-xl"
+              onClick={() => setShowListing(false)}
+            >
+              ✕
+            </button>
+
+            <h2 className="text-lg font-bold mb-4">SPINAL BAR LIST</h2>
+
+            {/* Download Button */}
+            <div className=' flex justify-end'>
+              <button
+                onClick={downloadExcel}
+                className="mb-4 bg-green-600 text-white px-4 py-2 rounded"
+              >
+                Download Excel
+              </button>
+            </div>
+
+
+            <div className="overflow-auto max-h-[70vh]">
+              <table className="w-full border">
+                <thead className=' sticky top-0 z-10'>
+                  <tr className='bg-primary-100'>
+                    <th className='border text-center'>Sl.no</th>
+                    <th className='border text-center'>Cervical</th>
+                    <th className='border text-center'>Thoracic</th>
+                    <th className='border text-center'>Lumber</th>
+                    <th className='border text-center'>Sacrum</th>
+                    <th className='border text-center'>Left Clavicle</th>
+                    <th className='border text-center'>Right Clavicle</th>
+                    <th className='border text-center'>Left Ilium</th>
+                    <th className='border text-center'>Right Ilium</th>
+                    <th className='border text-center'>Date & Time</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {cervicalY.map((value, index) => (
+                    <tr key={index}>
+                      <td className='border text-center'>{index + 1}</td>
+                      <td className={`border text-center ${cervicalY[index] >= Number(carvideRangeMin) ||
+                        cervicalY[index] >= Number(carvideRangeMax)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{cervicalY[index] ?? "-"}</td>
+                      <td className={`border text-center ${thoracicY[index] >= Number(thoracicRangeMin) ||
+                        thoracicY[index] >= Number(thoracicRangeMin)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{thoracicY[index] ?? "-"}</td>
+                      <td
+                        className={`border text-center ${lumberY[index] >= Number(lumberRangeMin) ||
+                            lumberY[index] >= Number(lumberRangeMax)
+                            ? "bg-red-500"
+                            : ""
+                          }`}
+                      >
+                        {lumberY[index] ?? "-"}
+                      </td>
+                      <td className={`border text-center ${sacrumY[index] >= Number(sacralRangeMin) ||
+                        sacrumY[index] >= Number(sacralRangeMax)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{sacrumY[index] ?? "-"}</td>
+                      <td className={`border text-center ${leftClavicleY[index] >= Number(leftCarvideRangeMin) ||
+                        leftClavicleY[index] >= Number(leftCarvideRangeMin)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{leftClavicleY[index] ?? "-"}</td>
+                      <td className={`border text-center ${rightClavicleY[index] >= Number(rightCarvideRangeMin) ||
+                        rightClavicleY[index] >= Number(rightCarvideRangeMin)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{rightClavicleY[index] ?? "-"}</td>
+                      <td className={`border text-center ${leftilium[index] >= Number(leftIliumRangeMin) ||
+                        leftilium[index] >= Number(leftIliumRangeMin)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{leftilium[index] ?? "-"}</td>
+                      <td className={`border text-center ${rightilium[index] >= Number(rightIliumRangeMin) ||
+                        rightilium[index] >= Number(rightIliumRangeMin)
+                        ? "bg-red-500"
+                        : ""
+                        }`}>{rightilium[index] ?? "-"}</td>
+                      <td className='border text-center'>{new Date(timestamps[index]).toLocaleString() || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+
+              </table>
+            </div>
+
           </div>
         </div>
-      </div>
-
-
-      {/* Charts Section */}
-      <div className="flex flex-wrap justify-center md:justify-between gap-4">
-        {[cervical, thoracic, lumber, sacral, leftShoulder, rightShoulder, leftHip, rightHip].map(
-          (chartData, i) => (
-            <div
-              key={i}
-              className="
-          w-full md:w-[48%] 
-          bg-white rounded-2xl p-4 
-          transition-all duration-300 
-          hover:-translate-y-1 shadow shadow-primary-300
-        "
-            >
-              {/* Title */}
-              <h3 className="text-center font-semibold text-primary-600 mb-3 text-lg">
-                {chartData.seriesName}
-              </h3>
-
-              {/* Chart Component */}
-              <LiveChart
-                data={[chartData]}
-                lineStyle={"straight"}
-                lineWidth={1}
-                chartType={"line"}
-                controls={controls}
-              />
-            </div>
-          )
-        )}
-      </div>
-
-
-
+      )}
 
     </div>
-  );
+  )
 }
 
 export default Home
 
 
 const CardRow = ({ label, value, bgImage, className }) => (
-  <div className={`${className} shadow-lg rounded-2xl p-4 w-full max-w-sm mx-auto relative`}>
+  <div className={`shadow-lg rounded-2xl p-4 w-full max-w-sm mx-auto relative border`}>
 
     {/* 🖼 Product / Sensor Image */}
     <img
       src={bgImage}
       alt={label}
-      className="w-32 mx-auto mt-6 mb-2 drop-shadow-md"
+      className="h-32 mx-auto mt-6 mb-2 drop-shadow-md rounded-xl"
     />
 
     {/* Title */}
@@ -364,10 +514,9 @@ const CardRow = ({ label, value, bgImage, className }) => (
     </h3>
 
     {/* Category / Value */}
-    <p className="text-gray-500 text-sm text-center">
+    <p className={` ${className} text-white font-semibold text-sm text-center py-1 rounded-lg`}>
       Value: {value}
     </p>
 
   </div>
 );
-
